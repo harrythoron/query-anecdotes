@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createAnec } from "../services/anecdotes"
+import { useNotifiDispatch } from "../services/CounterContext"
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
+  const notifyMsgDispatch = useNotifiDispatch()
+
   const newAnecMutation = useMutation({
     mutationFn: createAnec,
     onSuccess: (newAnec) => {
@@ -10,6 +13,10 @@ const AnecdoteForm = () => {
       // to optimize performance manually update the state
       const anecs = queryClient.getQueryData(['anecs'])
       queryClient.setQueryData(['anecs'], anecs.concat(newAnec))
+      notifyMsgDispatch({ type: "NOTIFY", payload: `added anecdote '${newAnec.content}'` })
+      setTimeout(() => {
+        notifyMsgDispatch({ type: "HIDE" })
+      }, 5000);
     }
   })
 
