@@ -17,6 +17,13 @@ const AnecdoteForm = () => {
       setTimeout(() => {
         notifyMsgDispatch({ type: "HIDE" })
       }, 5000);
+    },
+    onError: (err) => {
+      console.log(err.response.data.error, 'babi')
+      notifyMsgDispatch({ type: "NOTIFY", payload: err.response.data.error })
+      setTimeout(() => {
+        notifyMsgDispatch({ type: "HIDE" })
+      }, 5000);
     }
   })
 
@@ -24,9 +31,7 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    if (content.length < 5) {
-      return
-    }
+
     newAnecMutation.mutate({ content, votes: 0 })
 
   }
